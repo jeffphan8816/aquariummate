@@ -10,7 +10,7 @@ export default function Nav() {
   const [show, setShow] = useState(false);
   const activeLink = inactiveLink + ' bg-slate-600 text-white rounded-lg shadow text-xl font-medium';
   const inactiveIcon = 'w-6 h-6';
-  const activeIcon = inactiveIcon + ' text-primary';
+  const activeIcon = inactiveIcon ;
   const router = useRouter();
   const pathname = usePathname();
   async function logout() {

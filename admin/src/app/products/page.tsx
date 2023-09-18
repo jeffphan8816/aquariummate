@@ -1,4 +1,5 @@
 "use client";
+import ProductAddForm from "@/components/ProductForm";
 import { IProduct } from "@/types/backend";
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -9,6 +10,7 @@ const fetcher = (url: string) => fetch(url).then((r) => r.json());
 export default function Products() {
   // const [products,setProducts] = useState([]);
   // const fetcher = (url:string) => fetch(url).then(res => res.json())
+  const [showModal, setShowModal] = useState<boolean>(false);
 
   const { data, error, isLoading } = useSWR("/api/products", fetcher);
   console.log(data);
@@ -18,9 +20,10 @@ export default function Products() {
   if (isLoading) return <div>loading...</div>;
   return (
     <div className="rounded-lg">
-      <Link className="btn-primary" href={"/products/new"}>
+      <ProductAddForm showModal={showModal} setShowModal={setShowModal}/>
+      <button className="btn-primary" onClick={() =>setShowModal(true)}>
         Add new product
-      </Link>
+      </button>
       <table className="basic mt-2">
         <thead>
           <tr>

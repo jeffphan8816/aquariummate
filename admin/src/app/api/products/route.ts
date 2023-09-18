@@ -10,6 +10,7 @@ export async function GET() {
 }
 
 export async function POST(request: NextRequest) {
+  console.log(request)
   const { name, description, price } = await request.json();
 
   await mongooseConnect();
