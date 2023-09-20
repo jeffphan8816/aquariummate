@@ -7,8 +7,8 @@ interface IProduct {
     name: string;
     price: number;
     description: string;
-    // images: Types.Array<string>;
-    // category: ICategory;
+    images: Types.Array<string>;
+    category: ICategory;
     // properties: object;
     createdAt: string;
     updatedAt: string;

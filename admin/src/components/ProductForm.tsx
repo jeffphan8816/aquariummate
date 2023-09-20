@@ -3,22 +3,28 @@ import { useRouter } from "next/router";
 import Modal from "./Modal";
 import { IProduct } from "@/types/backend";
 import { set } from "mongoose";
+import { IFormProp } from "@/app/products/page";
 // import axios from "axios";
 // import Spinner from "@/components/Spinner";
 // import {ReactSortable} from "react-sortablejs";
 
 interface IProps {
-  showModal: boolean;
-  setShowModal: (show: boolean) => void;
+  productName?: string,
+  productDesription?: string,
+  productCategory?: string[],
+  productPrice?: number,
+  productImages?: string[],
+  setShowModal: (showModal: boolean) => void,
+
 }
 
-export default function ProductAddForm({ showModal, setShowModal }: IProps) {
-  const [name,setName] = useState<string>('');
-  const [description,setDescription] = useState<string>('');
-  // const [category,setCategory] = useState(assignedCategory || '');
+export default function ProductForm({productName,productDesription,productCategory,productPrice,productImages,setShowModal}: IProps) {
+  const [name,setName] = useState<string>(productName|| '');
+  const [description,setDescription] = useState<string>(productDesription|| '');
+  const [category,setCategory] = useState(productCategory || []);
   // const [productProperties,setProductProperties] = useState(assignedProperties || {});
-  const [price,setPrice] = useState<number>(0);
-  // const [images,setImages] = useState(existingImages || []);
+  const [price,setPrice] = useState<number>(productPrice || 0);
+  const [images,setImages] = useState(productImages || []);
   const [isUploading, setIsUploading] = useState(false);
   const saveProduct = async () => {
     const product = {
@@ -39,11 +45,6 @@ export default function ProductAddForm({ showModal, setShowModal }: IProps) {
   }
 
   return (
-    <Modal
-      isOpen={showModal}
-      onClose={() => setShowModal(false)}
-      title="Add new product"
-    >
       <form onSubmit={saveProduct}>
         <label>Product name</label>
         <input
@@ -141,6 +142,5 @@ export default function ProductAddForm({ showModal, setShowModal }: IProps) {
           Save
         </button>
       </form>
-    </Modal>
   );
 }

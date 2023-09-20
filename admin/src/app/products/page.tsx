@@ -1,17 +1,24 @@
 "use client";
-import ProductAddForm from "@/components/ProductForm";
+import Modal from "@/components/Modal";
+import ProductForm from "@/components/ProductForm";
 import { IProduct } from "@/types/backend";
 import Link from "next/link";
+import { title } from "process";
 import { useEffect, useState } from "react";
 import useSWR from "swr";
 
 const fetcher = (url: string) => fetch(url).then((r) => r.json());
 
+export interface IFormProp {
+  title: string;
+  product?: IProduct;
+  showModal: boolean;
+}
 export default function Products() {
   // const [products,setProducts] = useState([]);
   // const fetcher = (url:string) => fetch(url).then(res => res.json())
   const [showModal, setShowModal] = useState<boolean>(false);
-
+  const [formTitle, setFormTitle] = useState<string>("");
   const { data, error, isLoading } = useSWR("/api/products", fetcher);
   console.log(data);
 
@@ -20,21 +27,33 @@ export default function Products() {
   if (isLoading) return <div>loading...</div>;
   return (
     <div className="rounded-lg">
-      <ProductAddForm showModal={showModal} setShowModal={setShowModal}/>
-      <button className="btn-primary" onClick={() =>setShowModal(true)}>
+      <Modal
+        isOpen={showModal}
+        onClose={() => setShowModal(false)}
+        title={title}
+      >
+        <ProductForm setShowModal={setShowModal} />
+      </Modal>
+      <button
+        className="btn-primary"
+        onClick={() =>
+          setShowModal(true)
+        }
+      >
         Add new product
       </button>
-      <table className="basic mt-2">
+      <table className="basic mt-3">
         <thead>
           <tr>
             <td>Product name</td>
-            <td></td>
+            <td>Description </td>
+            <td>Settings</td>
           </tr>
         </thead>
         <tbody>
           {data.products.map((product: IProduct) => (
             <tr key={product._id}>
-              <td>{product.name}</td>
+              <td className="capitalize">{product.name}</td>
               <td>{product.description}</td>
               <td>
                 <Link
