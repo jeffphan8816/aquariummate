@@ -1,9 +1,7 @@
 "use client";
-
-import { useEffect, useState } from "react";
 import ProductForm from "@/components/ProductForm";
+import { data } from "autoprefixer";
 import useSWR from "swr";
-import { IFormProp } from "../../page";
 
 const fetcher = (url: string) => fetch(url).then((r) => r.json());
 export default function EditProductPage({
@@ -13,7 +11,15 @@ export default function EditProductPage({
 }) {
   const id = params.id;
   const { data, error, isLoading } = useSWR("/api/products/" + id, fetcher);
-  const [showModal, setShowModal] = useState<boolean>(false);
+  if (error) return <div>failed to load</div>;
+  if (isLoading) return <div>loading...</div>;
+  // const data = {
+  //   name: "test",
+  //   description: "test",
+  //   price: 100,
+  //   images: [],
+  //   category: [],
+  // };
 
   return (
     <div>
@@ -25,7 +31,7 @@ export default function EditProductPage({
           productDesription={data.description}
           productImages={data.images}
           productPrice={data.price}
-          setShowModal={setShowModal}
+          productId={data._id}
         />
       )}
     </div>

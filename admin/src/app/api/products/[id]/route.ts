@@ -1,23 +1,25 @@
 import { Product } from "@/models/Product.model";
 import { mongooseConnect } from "@/lib/mongoose";
 import { IProduct } from "@/types/backend";
+import { useParams } from "next/navigation";
 
-export async function GET(request:Request, context: { params: {id: string} }) {
+export async function GET(
+  request: Request,
+  context: { params: { id: string } }
+) {
   await mongooseConnect();
-  const product = await Product.findOne({_id: context.params.id});
-  return Response.json( product );
+  const product = await Product.findOne({ _id: context.params.id });
+  return Response.json(product);
 }
 
-export async function POST(request: Request) {
-  const { name, description, price } = await request.json();
+export async function POST(request: Request, context: { params: { id: string } }) {
+  // console.log(request)
+  const { name, description, price,category,images } = await request.json();
+  // console.log(request.json());
 
   await mongooseConnect();
-  const productDoc = await Product.create({
-    name,
-    description,
-    price,
-  });
-  return Response.json({ message: "Product Created" }, { status: 201 });
+  await Product.findByIdAndUpdate(context.params.id, {title:name,description:description,price:price});
+  return Response.json(true);
 }
 
 // export async function DELETE(request: Request) {

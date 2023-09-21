@@ -18,10 +18,8 @@ export default function Products() {
   // const [products,setProducts] = useState([]);
   // const fetcher = (url:string) => fetch(url).then(res => res.json())
   const [showModal, setShowModal] = useState<boolean>(false);
-  const [formTitle, setFormTitle] = useState<string>("");
   const { data, error, isLoading } = useSWR("/api/products", fetcher);
-  console.log(data);
-
+  
   // const { data, error, isLoading } = useSWR('/api/products', fetcher)
   if (error) return <div>failed to load</div>;
   if (isLoading) return <div>loading...</div>;
@@ -30,9 +28,9 @@ export default function Products() {
       <Modal
         isOpen={showModal}
         onClose={() => setShowModal(false)}
-        title={title}
+        title="Add new product"
       >
-        <ProductForm setShowModal={setShowModal} />
+        <ProductForm setShowModal={setShowModal}/>
       </Modal>
       <button
         className="btn-primary"

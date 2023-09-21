@@ -15,14 +15,14 @@ interface IProduct {
 }
 
 interface ICategory {
-    id: number;
+    _id: number;
     name: string;
     createdAt: string;
     updatedAt: string;
 }
 
 interface IOrder {
-    id: number;
+    _id: number;
     email: string;
     city: string;
     postalCode: string;

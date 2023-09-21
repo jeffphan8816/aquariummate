@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import Modal from "./Modal";
 import { IProduct } from "@/types/backend";
 import { set } from "mongoose";
@@ -14,11 +14,13 @@ interface IProps {
   productCategory?: string[],
   productPrice?: number,
   productImages?: string[],
-  setShowModal: (showModal: boolean) => void,
+  productId?: string,
+  // onSave: (name: string, description:string, price:number) => void,
+  setShowModal?: (showModal: boolean) => void,
 
 }
 
-export default function ProductForm({productName,productDesription,productCategory,productPrice,productImages,setShowModal}: IProps) {
+export default function ProductForm({productName,productDesription,productCategory,productPrice,productImages,setShowModal, productId}: IProps) {
   const [name,setName] = useState<string>(productName|| '');
   const [description,setDescription] = useState<string>(productDesription|| '');
   const [category,setCategory] = useState(productCategory || []);
@@ -26,13 +28,18 @@ export default function ProductForm({productName,productDesription,productCatego
   const [price,setPrice] = useState<number>(productPrice || 0);
   const [images,setImages] = useState(productImages || []);
   const [isUploading, setIsUploading] = useState(false);
+  const router = useRouter();
+  const id = productId ? "/" + productId : '';
   const saveProduct = async () => {
     const product = {
       name,
       description,
       price,
+      category,
+      images,
     };
-    const res = await fetch("/api/products", {
+    
+    const res = await fetch("/api/products" + id, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -41,9 +48,17 @@ export default function ProductForm({productName,productDesription,productCatego
     });
     const data = await res.json();
     console.log(data);
-    setShowModal(false);
+    if (setShowModal) {
+      setShowModal(false); 
+    }
   }
-
+  const onCancel = (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault();
+    if (setShowModal) {
+      setShowModal(false); 
+    }
+    router.push('/products');
+  }
   return (
       <form onSubmit={saveProduct}>
         <label>Product name</label>
@@ -140,6 +155,9 @@ export default function ProductForm({productName,productDesription,productCatego
         />
         <button type="submit" className="btn-primary">
           Save
+        </button>
+        <button className="btn-primary" onClick={onCancel}>
+          Cancel
         </button>
       </form>
   );
