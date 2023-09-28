@@ -1,6 +1,6 @@
 "use client";
 import ProductForm from "@/components/ProductForm";
-import { data } from "autoprefixer";
+// import { data } from "autoprefixer";
 import useSWR from "swr";
 
 const fetcher = (url: string) => fetch(url).then((r) => r.json());

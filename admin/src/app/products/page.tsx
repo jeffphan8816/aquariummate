@@ -76,7 +76,7 @@ export default function Products() {
                 </Link>
                 <Link
                   className="btn-red"
-                  href={"/products/delete/" + product.name}
+                  href={"/products/delete/" + product._id}
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"

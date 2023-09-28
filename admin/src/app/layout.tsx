@@ -24,7 +24,7 @@ export default async function RootLayout({
         <SessionProvider session={session}>
           <main className="mx-auto flex min-h-screen bg-slate-300">
             <Nav />
-            <div className="flex-grow p-4 bg-slate-500 rounded-xl mt-4">{children}</div>
+            <div className="flex-grow p-4 bg-slate-500 rounded-xl m-4">{children}</div>
           </main>
         </SessionProvider>
       </body>

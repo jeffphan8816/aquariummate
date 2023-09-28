@@ -4,6 +4,8 @@ import Modal from "./Modal";
 import { IProduct } from "@/types/backend";
 import { set } from "mongoose";
 import { IFormProp } from "@/app/products/page";
+import { ReactSortable } from "react-sortablejs";
+import Image from "next/image";
 // import axios from "axios";
 // import Spinner from "@/components/Spinner";
 // import {ReactSortable} from "react-sortablejs";
@@ -13,11 +15,15 @@ interface IProps {
   productDesription?: string,
   productCategory?: string[],
   productPrice?: number,
-  productImages?: string[],
+  productImages?: IPhotos[],
   productId?: string,
   // onSave: (name: string, description:string, price:number) => void,
   setShowModal?: (showModal: boolean) => void,
 
+}
+interface IPhotos  {
+  id: string,
+  link: string,
 }
 
 export default function ProductForm({productName,productDesription,productCategory,productPrice,productImages,setShowModal, productId}: IProps) {
@@ -26,7 +32,8 @@ export default function ProductForm({productName,productDesription,productCatego
   const [category,setCategory] = useState(productCategory || []);
   // const [productProperties,setProductProperties] = useState(assignedProperties || {});
   const [price,setPrice] = useState<number>(productPrice || 0);
-  const [images,setImages] = useState(productImages || []);
+  const [images,setImages] = useState<IPhotos[]>(productImages || []);
+  
   const [isUploading, setIsUploading] = useState(false);
   const router = useRouter();
   const id = productId ? "/" + productId : '';
@@ -59,6 +66,26 @@ export default function ProductForm({productName,productDesription,productCatego
     }
     router.push('/products');
   }
+
+  function updateImages(images: IPhotos[]) {
+    setImages(images);
+  }
+  async function uploadImages(ev: React.ChangeEvent<HTMLInputElement>) {
+    const files = ev.target?.files;
+    if (files && files.length) {
+      setIsUploading(true);
+      const data = new FormData();
+      for (let i = 0; i < files.length; i++) {
+        data.append('file', files[i]);
+      }
+      const res = await fetch('/api/upload', data);
+      setImages(oldImages => {
+        return [...oldImages, ...res.data.links];
+      });
+      setIsUploading(false);
+    }
+  }
+
   return (
       <form onSubmit={saveProduct}>
         <label>Product name</label>
@@ -98,29 +125,29 @@ export default function ProductForm({productName,productDesription,productCatego
                 </select>
               </div>
             </div>
-          ))}
+          ))} */}
         <label>Photos</label>
         <div className="mb-2 flex flex-wrap gap-1">
           <ReactSortable
             list={images}
             className="flex flex-wrap gap-1"
-            setList={updateImagesOrder}
+            setList={setImages}
           >
             {!!images?.length &&
               images.map((link) => (
                 <div
-                  key={link}
+                  key={link.id}
                   className="h-24 bg-white p-4 shadow-sm rounded-sm border border-gray-200"
                 >
-                  <img src={link} alt="" className="rounded-lg" />
+                  <Image src={link.link} alt="" className="rounded-lg" />
                 </div>
               ))}
           </ReactSortable>
-          {isUploading && (
+          {/* {isUploading && (
             <div className="h-24 flex items-center">
               <Spinner />
             </div>
-          )}
+          )} */}
           <label className="w-24 h-24 cursor-pointer text-center flex flex-col items-center justify-center text-sm gap-1 text-primary rounded-sm bg-white shadow-sm border border-primary">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -139,7 +166,7 @@ export default function ProductForm({productName,productDesription,productCatego
             <div>Add image</div>
             <input type="file" onChange={uploadImages} className="hidden" />
           </label>
-        </div> */}
+        </div>
         <label>Description</label>
         <textarea
           placeholder="description"

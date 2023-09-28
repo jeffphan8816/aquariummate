@@ -14,17 +14,16 @@ export async function GET(
 
 export async function POST(request: Request, context: { params: { id: string } }) {
   // console.log(request)
-  const { name, description, price,category,images } = await request.json();
+  const { name, description, price} = await request.json();
   // console.log(request.json());
 
   await mongooseConnect();
-  await Product.findByIdAndUpdate(context.params.id, {title:name,description:description,price:price});
+  await Product.findByIdAndUpdate(context.params.id, {name:name,description:description,price:price});
   return Response.json(true);
 }
 
-// export async function DELETE(request: Request) {
-//   const id = request.nextUrl.searchParams.get("id");
-//   await mongooseConnect();
-//   await Product.findByIdAndDelete(id);
-//   return Response.json({ message: "Topic deleted" }, { status: 200 });
-// }
+export async function DELETE(request: Request, context: { params: { id: string } }) {
+  await mongooseConnect();
+  await Product.findByIdAndDelete(context.params.id);
+  return Response.json({ message: "Product deleted" }, { status: 200 });
+}
